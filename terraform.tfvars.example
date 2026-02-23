@@ -1,0 +1,80 @@
+# =============================================================================
+# EXAMPLE TERRAFORM VARIABLES FILE
+# =============================================================================
+# Copy this file and rename it to:
+# - dev.tfvars for development environment
+# - staging.tfvars for staging environment  
+# - prod.tfvars for production environment
+#
+# Usage: terraform plan -var-file="dev.tfvars"
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# GENERAL SETTINGS
+# -----------------------------------------------------------------------------
+
+environment  = "dev"
+project_name = "webapp"
+aws_region   = "us-east-1"
+
+# -----------------------------------------------------------------------------
+# NETWORK SETTINGS
+# -----------------------------------------------------------------------------
+
+vpc_cidr           = "10.0.0.0/16"
+availability_zones = ["us-east-1a", "us-east-1b"]
+
+public_subnet_cidrs  = ["10.0.1.0/24", "10.0.2.0/24"]
+private_subnet_cidrs = ["10.0.10.0/24", "10.0.20.0/24"]
+
+# Cost optimization: use single NAT Gateway in dev/staging
+enable_nat_gateway = true
+single_nat_gateway = true
+
+# -----------------------------------------------------------------------------
+# EC2 SETTINGS
+# -----------------------------------------------------------------------------
+
+instance_type = "t2.micro"
+instance_count = 2
+
+# Leave empty to use latest Amazon Linux 2023 AMI
+ami_id = ""
+
+# SSH key pair name (optional - leave empty to disable SSH access)
+key_name = ""
+
+# Enable detailed monitoring (additional cost)
+enable_detailed_monitoring = false
+
+# -----------------------------------------------------------------------------
+# LOAD BALANCER SETTINGS
+# -----------------------------------------------------------------------------
+
+alb_internal = false
+
+health_check_path     = "/"
+health_check_interval = 30
+health_check_timeout  = 5
+healthy_threshold     = 2
+unhealthy_threshold   = 2
+
+# -----------------------------------------------------------------------------
+# SECURITY SETTINGS
+# -----------------------------------------------------------------------------
+
+# CIDR blocks allowed to access the ALB
+allowed_cidr_blocks = ["0.0.0.0/0"]
+
+# CIDR blocks allowed for SSH access (only if key_name is provided)
+# Example: ["10.0.0.0/8", "192.168.1.0/24"]
+ssh_allowed_cidr_blocks = []
+
+# -----------------------------------------------------------------------------
+# TAGS
+# -----------------------------------------------------------------------------
+
+common_tags = {
+  Owner      = "DevOps Team"
+  CostCenter = "Engineering"
+}
